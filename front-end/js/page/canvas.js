@@ -50,7 +50,7 @@ $(document).ready(function() {
 				};
 				with( ctx ){
 					beginPath();
-					arc(x, y, 15, 0, Math.PI * 2);
+					arc(x, y, 20, 0, Math.PI * 2);
 					console.log(x+"    "+y)
 					console.log(CanvasWidth+" "+CanvasHeight);
 					if ( x > CanvasWidth*2/5 && x < CanvasWidth*4/5 && y >CanvasHeight*2/5 && y < CanvasHeight*4/5) {
