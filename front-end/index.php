@@ -11,7 +11,9 @@
 </head>
 <body>
 	<div class="main-contain hide">
+		<!-- 添加canvas绘制遮罩 -->
 		<div class="card-ul"></div>
+		
 		<div class="carfix"></div>
 		<div class="not-like">
 			<div class="not-like-closebtn">x</div>

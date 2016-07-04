@@ -81,6 +81,9 @@ a, a:link, a:visited, a:hover, a:active {
 	/*background: red;*/
 	margin-top: -120px;
 }
+.score-canvas{
+	font-size: 6em;
+}
 .carfix{
 	height: 50px;width: 100%;
 }

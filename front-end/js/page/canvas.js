@@ -6,21 +6,6 @@ $(document).ready(function() {
 
 	var score_data;
 	
-	function fillImg(str, num){
-		var strCanvas = $(".score-canvas");
-		strCanvas = strCanvas[num];
-		var ctx = strCanvas.getContext("2d");
-		//resize canvas width and height
-		ctx.canvas.width = CanvasWidth;
-		ctx.canvas.height = CanvasHeight;
-		ctx.font = "6em sans-serif";
-		// ctx.font = "5em matchFont";
-		str = "" + str;
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'middle';
-		ctx.fillText(str, CanvasWidth/2, CanvasHeight/2);
-	}
-
 	// 画阴影的 想把画阴影的和擦的放在一起了
 	// todo
 	function fillShadow(i){
@@ -30,16 +15,16 @@ $(document).ready(function() {
 		//resize canvas width and height
 		ctx.canvas.width = CanvasWidth;
 		ctx.canvas.height = CanvasHeight;
-
+		// 填充颜色
 		ctx.fillStyle = "#dbdbdb";
 		ctx.fillRect(0, 0, 2*CanvasWidth, 2*CanvasHeight);
 
 	}
+	// 擦除部分
 	function clearShadow(){
 		var _this, ctx;
 		var shadowCanvas = $(".score-shadow");
 		var mousedown = false;
-
 		function eventDown(e){
 			e.preventDefault();
 			mousedown = true;
@@ -51,8 +36,8 @@ $(document).ready(function() {
 		function eventMove(e){
 			e.preventDefault();
 			if( mousedown ){
+
 				if ( !!event.touches ) {
-					console.log(event.touches);
 					e = event.touches[0];
 				};
 
@@ -66,7 +51,8 @@ $(document).ready(function() {
 				with( ctx ){
 					beginPath();
 					arc(x, y, 15, 0, Math.PI * 2);
-					console.log(x+"    "+y);
+					console.log(x+"    "+y)
+					console.log(CanvasWidth+" "+CanvasHeight);
 					if ( x > CanvasWidth*2/5 && x < CanvasWidth*4/5 && y >CanvasHeight*2/5 && y < CanvasHeight*4/5) {
 						if ( _this.attr("data-ok") !== "ok" ) {
 							var openId = getUrlParam("openid");
@@ -87,13 +73,14 @@ $(document).ready(function() {
 									if (res.status == 200) {
 
 										for(k in score_data){
+
 											// 判断被刮的课程名称的成绩是不是大于90分
 											if (score_data[k].class_name == className && score_data[k].score >= 90) {
+												console.log(1);
 												flower = '<div class="flower"><div><img src="img/flower.png" alt="鲜花" /></div><div>';
 												var _parent = _this.parent().parent();
 												_parent.append(flower);
-												_parent.children('.flower').delay(1000).fadeIn(1500).fadeOut(1500);
-
+												_parent.children('.flower').delay(3000).fadeIn().fadeOut();
 											}
 										}
 									}
@@ -162,6 +149,7 @@ $(document).ready(function() {
 				type: 'GET',
 			},
 		})
+		//get请求成功后生成canvas画布部分，并渲染数据
 		.done(function(res) {
 			console.log(res);
 			if (res.status == 200){
@@ -176,7 +164,8 @@ $(document).ready(function() {
 					cardLi += '<div class="card-li">';
 					cardLi += '<h1 class="yellow-color">'+ data[i].class_name +'</h1>';//scoreName
 					cardLi += '<div class="score-show">'
-							+ '<canvas class="score-canvas">浏览器暂不支持该功能</canvas>'
+							+'<div class="score-canvas">'+data[i].score+'</div>'
+							// + '<canvas class="score-canvas">浏览器暂不支持该功能</canvas>'
 							+ '<canvas class="score-shadow '+ hideShadow +'">浏览器暂不支持该功能<canvas>'
 							+'</div>';
 					cardLi += '<div class="dash-border"></div>';
@@ -190,7 +179,6 @@ $(document).ready(function() {
 				CanvasHeight = $(".score-canvas").height();
 				for (i in data) {
 					fillShadow(i);
-					fillImg(data[i].score, i);
 				};
 				if (res.is_like == false) {
 					$(".score-shadow").addClass("hide");
@@ -199,9 +187,10 @@ $(document).ready(function() {
 			}
 			else{
 				// no results
-				console.log(res.status);
-				var className = ".err-"+res.status;
+				var className = res.status == 405?".err-500":".err-"+res.status;
+				// 影藏原来样式
 				$(".loading").addClass("hide");
+				// 
 				$(className).removeClass("hide");
 			}
 		})
@@ -268,7 +257,7 @@ $(document).ready(function() {
 				console.log( "失败，请检查你的网络问题。" );
 			}
 		});
-		//console.log( "switch: "+isLike );
+		console.log( "switch: "+isLike );
 	}
 	//TODO
 	$(".tryagain").click(function(){
